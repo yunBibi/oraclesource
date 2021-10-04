@@ -1208,17 +1208,51 @@ DELETE EMP_TEMP2;    -- 내용 없이 구조만 남아있게 된다.
 
 ROLLBACK;
 
--- SELECT
+-- 조인JOIN : 두 개 이상의 테이블을 연결하여 하나의 테이블처럼 출력할 때 사용하는 방식
+-- 내부조인(INNER JOIN) : 등가 조인, 단순 조인으로 부르기도 함 (교집합 영역만 뽑아냄)
+-- 외부조인(OUTER JOIN)
 
+SELECT COUNT(*) FROM emp;
+SELECT COUNT(*) FROM dept;
 
+-- 카테시안 조인 : 나올 수 있는 모든 조합
+SELECT *
+FROM emp, dept;
 
+-- 내부조인(INNER조인)
+-- 등가조인 : 일치하는 데이터 추출
+-- 비등가조인 : 특정 범위에 있는 데이터 추출
 
+SELECT *
+FROM emp, dept
+WHERE emp.deptno = dept.deptno;
 
+SELECT empno, ename, emp.deptno, dname
+FROM emp, dept
+WHERE emp.deptno = dept.deptno;
 
+SELECT empno, ename, emp.deptno, dname
+FROM emp, dept
+WHERE emp.deptno = dept.deptno
+ORDER BY dname;
 
+-- 테이블 별칭 설정
+SELECT empno, ename, e.deptno, dname
+FROM emp e, dept d
+WHERE e.deptno = d.deptno
+ORDER BY dname;
 
+-- SAL 3000 이상인 사원들의 사번, 이름, 부서번호, 부서명, 급여
+SELECT empno, ename, d.deptno, dname, sal
+FROM emp e, dept d
+WHERE e.deptno = d.deptno AND sal >=3000;
 
+-- 급여가 2500 이하이고, 사원번호가 9999 이하인 사원의 사번, 이름, 급여, 부서명, 부서 위치
+SELECT empno, ename, sal, dname, loc
+FROM emp e, dept d
+WHERE e.deptno = d.deptno AND sal <=2500 AND empno <=9999;
 
+-- 28일 오전 끝
 
 
 
@@ -1608,5 +1642,128 @@ DELETE FROM exam_emp
 where empno in 
 (select empno from exam_emp, salgrade 
 where sal between losal and hisal and grade = 5);
+
+select * from dept_temp;
+
+-- 10월 1일 오후
+-- DDL(데이터 정의어)
+-- 객체를 생성, 변경, 삭제
+-- 실행하면 반영됨
+
+-- CREATE(생성) ALTER(변경), DROP(삭제)
+-- CREATE TABLE 테이블이름(
+--        필드명1 자료형,
+--        필드명2 자료형, 
+-- )
+
+-- 테이블 이름 규칙
+-- 문자로 시작(영어 권장)
+-- 같은 사용자 안에서 동일한 테이블 명 사용 불가
+-- SQL 키워드는 테이블 이름으로 사용할 수 없음
+
+-- 필드명 생성 규칙
+-- 문자로 시작
+-- 열 이름은 중복되면 안 됨
+-- SQL키워드 사용 불가
+
+-- 자료형 : 숫자 NUMBER, 가변문자 VARCHR2, 날짜 DATE...
+
+CREATE TABLE EMP_DDL(
+    EMPNO NUMBER(4),   -- 숫자로 4자리 허용
+    ENAME VARCHAR2(10),
+    JOB VARCHAR2(9),
+    MGR NUMBER(4),
+    HIREDATE DATE,
+    SAL NUMBER(7,2),  -- 숫자로 7자리, 소수점 2자리 허용
+    COMM NUMBER(7,2),
+    DEPTNO NUMBER(2)
+);
+
+DESC EMP_DDL;
+
+DROP TABLE emp_ddl;
+
+CREATE TABLE dept_ddl AS SELECT *FROM dept;
+ 
+-- 구조 + 데이터 이용하여 생성
+CREATE TABLE dept_ddl_30 AS SELECT *FROM dept WHERE deptno =30;
+
+-- 다른 테이블의 구조만 복사하여 새 테이블 생성
+CREATE TABLE dept_ddl2 AS SELECT *FROM dept WHERE 1<>1;
+SELECT * FROM dept_ddl2;
+
+-- ALTER : 이미 생성된 객체를 변경
+CREATE TABLE EMP_ALTER AS SELECT * FROM EMP;
+
+-- 새로운 칼럼(열) 추가 : ADD
+DESC EMP_ALTER;
+
+ALTER TABLE EMP_ALTER ADD HP VARCHAR2(20);
+
+SELECT * FROM EMP_ALTER;
+
+-- RENAME : 열 이름을 변경
+ALTER TABLE EMP_ALTER RENAME COLUMN HP TO TEL;
+DESC EMP_ALTER;
+
+-- MODIFY : 열의 자료형을 변경
+ALTER TABLE EMP_ALTER MODIFY EMPNO NUMBER(5);
+
+-- DROP : 열 삭제
+ALTER TABLE EMP_ALTER DROP COLUMN TEL;
+
+-- 테이블 이름 변경
+RENAME EMP_ALTER TO EMP_RENAME;
+
+DESC EMP_RENAME;
+
+-- 테이블 데이터를 삭제 TRUNCATE
+SELECT * FROM EMP_RENAME;
+TRUNCATE TABLE EMP_RENAME;
+
+-- 실습1 
+CREATE TABLE member(
+    id CHAR(8),
+    name VARCHAR2(10),
+    addr VARCHAR2(50),
+    nation CHAR(4),
+    email VARCHAR2(50),
+    age NUMBER(7,2)
+    );
+
+DESC member;
+
+ALTER TABLE member ADD BIGO VARCHAR2(20);
+
+ALTER TABLE member MODIFY BIGO VARCHR2(30);
+
+ALTER TABLE member RENAME COLUMN BIGO TO REMARK; 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
