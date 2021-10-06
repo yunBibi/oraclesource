@@ -60,11 +60,13 @@ GRANT RESOURCE, CREATE SESSION, CREATE TABLE TO c##test2;
 -- c##test에게 users 테이블 공간 2M 할당
 ALTER USER c##test2 QUOTA 2M ON USERS;
 
+DROP USER c##test2 CASCADE;
 
-
-
-
-
+-- 10월 6일 오전
+-- 사용자이름을 c##~이런 식으로 짓는 이유 : COMMON_USER_PREFIX의 기본값이 c##이기 때문
+CREATE USER c##java IDENTIFIED BY 12345;
+GRANT RESOURCE, CONNECT TO c##java;
+ALTER USER c##java QUOTA 30M ON USERS;
 
 
 
